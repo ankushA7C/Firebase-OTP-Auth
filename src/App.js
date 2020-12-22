@@ -1,25 +1,27 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import firebase from './firebase'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends Component {
+  onSubmit = () => {
+    let recaptcha = new firebase.auth.RecaptchaVerifier('recaptcha');
+    let number = "";//number should +912343212342
+    firebase.auth().signInWithPhoneNumber(number, recaptcha).then(function (e) {
+      let code = prompt('Enter the OTP', '');
+      if (code == null) return;
+      e.confirm(code).then(function (result) {
+        console.log("Result:", result.user);
+      })
+    })
+  }
+  render() {
+    return (
+      <>
+        <div id="recaptcha"></div>
+        <button onClick={this.onSubmit}>click me</button>
+      </>
+    );
+  }
 }
 
-export default App;
+
